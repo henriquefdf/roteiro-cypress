@@ -56,4 +56,82 @@ describe('template spec', () => {
     cy.get('.todo-list li')
       .should('have.length', 2);
   });
+/*----------Novos testes----------*/
+
+  it('Edita uma tarefa', () => {
+    cy.visit('http://127.0.0.1:7001');
+
+    cy.get('.new-todo')
+      .type('TP2 de ES{enter}');
+
+    cy.get('.todo-list li label')
+      .dblclick();
+
+    cy.get('.edit')
+      .type(' sobre testes e2e{enter}');
+
+    cy.get('.todo-list li')
+      .should('have.text', 'TP2 de ES sobre testes e2e');
+  });
+
+  it('Cancela edição de uma tarefa', () => {
+    cy.visit('http://127.0.0.1:7001');
+
+    cy.get('.new-todo')
+      .type('TP2 de ES{enter}');
+
+    cy.get('.todo-list li label')
+      .dblclick();
+
+    cy.get('.edit')
+      .type(' de Engenharia de Software')
+      .type('{esc}')
+
+    cy.get('.todo-list li')
+      .should('have.text', 'TP2 de ES');
+  });
+
+  it('Marca todas as tarefas como completas', () => {
+    cy.visit('http://127.0.0.1:7001');
+
+    cy.get('.new-todo')
+      .type('TP2 de ES{enter}')
+      .type('Prova de ES{enter}');
+
+      cy.get('.todo-list li .toggle')
+      .each(($el) => {
+        cy.wrap($el).click();
+      });
+
+    cy.get('.todo-list li')
+      .should('have.length', 2)
+      .each(($el) => {
+        cy.wrap($el).should('have.class', 'completed');
+      });
+  });
+
+  it('Desmarca todas as tarefas', () => {
+    cy.visit('http://127.0.0.1:7001');
+
+    cy.get('.new-todo')
+      .type('TP2 de ES{enter}')
+      .type('Prova de ES{enter}');
+
+    cy.get('.todo-list li .toggle')
+      .each(($el) => {
+        cy.wrap($el).click();
+      });
+
+    cy.get('.todo-list li .toggle')
+      .each(($el) => {
+        cy.wrap($el).click();
+      });
+
+    cy.get('.todo-list li')
+      .should('have.length', 2)
+      .each(($el) => {
+        cy.wrap($el).should('not.have.class', 'completed');
+      });
+  });
+
 });
